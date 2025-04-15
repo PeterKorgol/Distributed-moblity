@@ -1,0 +1,11 @@
+/Users/macfolder/Documents/Documents/Distrubuteed_moblity/Lab2/bin/Release/net8.0/publish/Lab2
+/Users/macfolder/Documents/Documents/Distrubuteed_moblity/Lab2/bin/Release/net8.0/publish/appsettings.Development.json
+/Users/macfolder/Documents/Documents/Distrubuteed_moblity/Lab2/bin/Release/net8.0/publish/appsettings.json
+/Users/macfolder/Documents/Documents/Distrubuteed_moblity/Lab2/bin/Release/net8.0/publish/Lab2.dll
+/Users/macfolder/Documents/Documents/Distrubuteed_moblity/Lab2/bin/Release/net8.0/publish/Lab2.deps.json
+/Users/macfolder/Documents/Documents/Distrubuteed_moblity/Lab2/bin/Release/net8.0/publish/Lab2.runtimeconfig.json
+/Users/macfolder/Documents/Documents/Distrubuteed_moblity/Lab2/bin/Release/net8.0/publish/Lab2.pdb
+/Users/macfolder/Documents/Documents/Distrubuteed_moblity/Lab2/bin/Release/net8.0/publish/Microsoft.OpenApi.dll
+/Users/macfolder/Documents/Documents/Distrubuteed_moblity/Lab2/bin/Release/net8.0/publish/Swashbuckle.AspNetCore.Swagger.dll
+/Users/macfolder/Documents/Documents/Distrubuteed_moblity/Lab2/bin/Release/net8.0/publish/Swashbuckle.AspNetCore.SwaggerGen.dll
+/Users/macfolder/Documents/Documents/Distrubuteed_moblity/Lab2/bin/Release/net8.0/publish/Swashbuckle.AspNetCore.SwaggerUI.dll
