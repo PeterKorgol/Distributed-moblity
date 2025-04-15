@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Client</title>
+</head>
+<body>
+    <h1>WebSocket Chat</h1>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Type a message">
+    <button id="sendButton">Send</button>
+
+    <script>
+        const socket = new WebSocket('ws://localhost:8080');
+
+        socket.onopen = function(event) {
+            console.log('Connected to WebSocket server');
+        };
+
+        socket.onmessage = function(event) {
+            try {
+                const parsedData = JSON.parse(event.data); 
+                
+                const sender = parsedData.sender;
+                const message = parsedData.message;
+                const timestamp = new Date(parsedData.timestamp).toLocaleTimeString(); 
+
+                // Append formatted message to chat
+                const messagesDiv = document.getElementById('messages');
+                messagesDiv.innerHTML += `<p><strong>${sender}:</strong> ${message} <em>(${timestamp})</em></p>`;
+            } catch (error) {
+                console.error("Error parsing message:", error);
+            }
+        };
+
+        socket.onerror = function(error) {
+            console.error('WebSocket Error: ', error);
+        };
+
+        socket.onclose = function(event) {
+            console.log('Disconnected from WebSocket server');
+        };
+
+        document.getElementById('sendButton').onclick = function() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+
+            if (message.trim() !== '') {
+                const messageObject = {
+                    sender: "Html Client", 
+                    message: message
+                };
+
+                socket.send(JSON.stringify(messageObject)); 
+                messageInput.value = '';
+            }
+        };
+    </script>
+</body>
+</html>

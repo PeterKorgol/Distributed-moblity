@@ -1,0 +1,375 @@
+<!-- public/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Quiz Game</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+text-align: center;
+padding: 50px;
+}
+.question {
+font-size: 24px;
+}
+.options {
+list-style: none;
+padding: 0;
+}
+.options li {
+margin: 10px;
+cursor: pointer;
+}
+.button {
+padding: 10px 20px;
+font-size: 18px;
+cursor: pointer;
+}
+.button:hover {
+background-color: #ddd;
+}
+#timer {
+font-size: 20px;
+margin-top: 20px;
+}
+#leaderboard {
+margin-top: 20px;
+font-size: 18px;
+}
+</style>
+</head>
+<body>
+<h1>Live Quiz Game</h1>
+<div id="usernamePrompt">
+<input type="text" id="username" placeholder="Enter your name" />
+<button class="button" onclick="setUsername()">Join Game</button>
+</div>
+<div id="gameArea" style="display: none;">
+<div class="question" id="question">Loading question...</div>
+<ul class="options" id="options"></ul>
+<button class="button" id="nextQuestionBtn" onclick="nextQuestion()" style="display: none;">Next
+Question</button>
+<div id="timer">Time: 10</div>
+</div>
+<div id="leaderboard" style="display: none;">
+<h2>Leaderboard</h2>
+<pre id="scores"></pre>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+let userId;
+let currentQuestionIndex = 0;
+const usernamePrompt = document.getElementById('usernamePrompt');
+const gameArea = document.getElementById('gameArea');
+const questionDiv = document.getElementById('question');
+const optionsDiv = document.getElementById('options');
+const timerDiv = document.getElementById('timer');
+const leaderboardDiv = document.getElementById('leaderboard');
+const scoresDiv = document.getElementById('scores');
+const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+socket.on('usernamePrompt', () => {
+usernamePrompt.style.display = 'block';
+});
+function setUsername() {
+const username = document.getElementById('username').value;
+if (username) {
+socket.emit('setUsername', username);
+userId = Date.now(); // Use unique ID based on timestamp
+usernamePrompt.style.display = 'none';
+gameArea.style.display = 'block';
+socket.emit('startGame');
+}
+}
+socket.on('question', (question) => {
+questionDiv.textContent = question.question;
+optionsDiv.innerHTML = '';
+question.options.forEach((option, index) => {
+const li = document.createElement('li');
+li.textContent = option;
+li.onclick = () => {
+socket.emit('answer', { answer: index, userId });
+nextQuestionBtn.style.display = 'block'; // Show "Next Question" button
+};
+optionsDiv.appendChild(li);
+});
+});
+socket.on('timer', (timeLeft) => {
+timerDiv.textContent = `Time: ${timeLeft}`;
+});
+function nextQuestion() {
+nextQuestionBtn.style.display = 'none'; // Hide the "Next Question" button
+}
+socket.on('end', (scores) => {
+leaderboardDiv.style.display = 'block';
+scoresDiv.textContent = JSON.stringify(scores, null, 2);
+});
+</script>
+</body>
+</html> -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Quiz Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .question {
+            font-size: 24px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            margin: 10px;
+            cursor: pointer;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #ddd;
+        }
+        #timer {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        #leaderboard {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Quiz Game</h1>
+    
+    <div id="usernamePrompt">
+        <input type="text" id="username" placeholder="Enter your name" />
+        <button class="button" onclick="setUsername()">Join Game</button>
+    </div>
+
+    <div id="gameArea" style="display: none;">
+        <div class="question" id="question">Loading question...</div>
+        <ul class="options" id="options"></ul>
+        <button class="button" id="nextQuestionBtn" onclick="nextQuestion()" style="display: none;">Next Question</button>
+        <div id="timer">Time: 10</div>
+    </div>
+
+    <div id="leaderboard" style="display: none;">
+        <h2>Leaderboard</h2>
+        <pre id="scores"></pre>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let userId;
+
+        const usernamePrompt = document.getElementById('usernamePrompt');
+        const gameArea = document.getElementById('gameArea');
+        const questionDiv = document.getElementById('question');
+        const optionsDiv = document.getElementById('options');
+        const timerDiv = document.getElementById('timer');
+        const leaderboardDiv = document.getElementById('leaderboard');
+        const scoresDiv = document.getElementById('scores');
+        const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+
+        function setUsername() {
+            const username = document.getElementById('username').value;
+            if (username) {
+                console.log("Sending setUsername event with:", username);
+                socket.emit('setUsername', username);
+                userId = Date.now(); 
+                usernamePrompt.style.display = 'none';
+                gameArea.style.display = 'block';
+
+                console.log("Emitting startGame event...");
+                socket.emit('startGame');
+            }
+        }
+
+        socket.on('question', (question) => {
+            console.log("Received question:", question);
+            questionDiv.textContent = question.question;
+            optionsDiv.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const li = document.createElement('li');
+                li.textContent = option;
+                li.onclick = () => {
+                    console.log("Answering:", option);
+                    socket.emit('answer', { answer: index, userId });
+                    nextQuestionBtn.style.display = 'block';
+                };
+                optionsDiv.appendChild(li);
+            });
+        });
+
+        socket.on('timer', (timeLeft) => {
+            timerDiv.textContent = `Time: ${timeLeft}`;
+        });
+
+        function nextQuestion() {
+            nextQuestionBtn.style.display = 'none';
+        }
+
+        socket.on('end', (scores) => {
+            leaderboardDiv.style.display = 'block';
+            scoresDiv.textContent = JSON.stringify(scores, null, 2);
+        });
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Quiz Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .question {
+            font-size: 24px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            margin: 10px;
+            cursor: pointer;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #ddd;
+        }
+        #timer {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        #leaderboard {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Quiz Game</h1>
+    
+    <div id="usernamePrompt">
+        <input type="text" id="username" placeholder="Enter your name" />
+        <button class="button" onclick="setUsername()">Join Game</button>
+    </div>
+
+    <div id="gameArea" style="display: none;">
+        <div class="question" id="question">Loading question...</div>
+        <ul class="options" id="options"></ul>
+        <button class="button" id="nextQuestionBtn" onclick="nextQuestion()" style="display: none;">Next Question</button>
+        <div id="timer">Time: 10</div>
+    </div>
+
+    <div id="leaderboard" style="display: none;">
+        <h2>Leaderboard</h2>
+        <pre id="scores"></pre>
+    </div>
+
+    <script>
+        const socket = new WebSocket("ws://localhost:3000"); // Your WebSocket server URL
+        let userId;
+
+        const usernamePrompt = document.getElementById('usernamePrompt');
+        const gameArea = document.getElementById('gameArea');
+        const questionDiv = document.getElementById('question');
+        const optionsDiv = document.getElementById('options');
+        const timerDiv = document.getElementById('timer');
+        const leaderboardDiv = document.getElementById('leaderboard');
+        const scoresDiv = document.getElementById('scores');
+        const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+
+        socket.onopen = () => {
+            console.log("Connected to WebSocket server");
+        };
+
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            if (message.event === 'usernamePrompt') {
+                // Handle server asking for username
+                usernamePrompt.style.display = 'block';
+            }
+
+            if (message.event === 'question') {
+                // Display the question and options
+                questionDiv.textContent = message.question;
+                optionsDiv.innerHTML = '';
+
+                message.options.forEach((option, index) => {
+                    const li = document.createElement('li');
+                    li.textContent = option;
+                    li.onclick = () => {
+                        console.log("Answering:", option);
+                        socket.send(JSON.stringify({
+                            event: 'answer',
+                            answer: index,
+                            userId
+                        }));
+                        nextQuestionBtn.style.display = 'block';
+                    };
+                    optionsDiv.appendChild(li);
+                });
+            }
+
+            if (message.event === 'timer') {
+                timerDiv.textContent = `Time: ${message.timeLeft}`;
+            }
+
+            if (message.event === 'end') {
+                // Show leaderboard
+                leaderboardDiv.style.display = 'block';
+                scoresDiv.textContent = JSON.stringify(message.scores, null, 2);
+            }
+        };
+
+        function setUsername() {
+            const username = document.getElementById('username').value;
+            if (username) {
+                console.log("Sending setUsername event with:", username);
+                userId = Date.now(); // Generate a unique ID for the user
+                socket.send(JSON.stringify({
+                    event: 'setUsername',
+                    username: username
+                }));
+
+                usernamePrompt.style.display = 'none';
+                gameArea.style.display = 'block';
+
+                console.log("Emitting startGame event...");
+                socket.send(JSON.stringify({
+                    event: 'startGame'
+                }));
+            }
+        }
+
+        function nextQuestion() {
+            nextQuestionBtn.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
