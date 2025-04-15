@@ -1,0 +1,35 @@
+[
+{
+"id": "1",
+"title": "Inception",
+"genre": "Sci-Fi",
+"releaseYear": 2010,
+"posterImageName": "inception",
+"description": "A thief who steals corporate secrets through dream-sharing technology is given the inverse taskof planting an idea into the mind of a CEO."
+},
+{
+"id": "2",
+"title": "The Godfather",
+"genre": "Crime",
+"releaseYear": 1972,
+"posterImageName": "godfather",
+"description": "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire tohis reluctant son."
+},
+{
+"id": "3",
+"title": "Parasite",
+"genre": "Thriller",
+"releaseYear": 2019,
+"posterImageName": "parasite",
+"description": "Greed and class discrimination threaten the newly formed symbiotic relationship between thewealthy Park family and the destitute Kim clan."
+},
+{
+"id": "4",
+"title": "The Dark Knight",
+"genre": "Action",
+"releaseYear": 2008,
+"posterImageName": "dark_knight",
+"description": "When the menace known as The Joker emerges from his mysterious past, he wreaks havoc andchaos on the people of Gotham."
+}
+]
+
